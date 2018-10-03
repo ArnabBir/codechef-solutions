@@ -4,6 +4,16 @@ using namespace std;
 
 bool matrix[11][11];
 
+void printMatrix(int n, int m) {
+	
+	for(int i = 0; i < n; ++i) {
+		for(int j = 0; j < m; ++j) {
+			cout<<matrix[i][j]<<" ";
+		}
+		cout<<endl;
+	}
+}
+
 void move(vector<int> v[4], int x1, int y1, int x2, int y2) {
 	
 	v[0].push_back(x1+1);
@@ -18,17 +28,18 @@ void move(vector<int> v[4], int x1, int y1, int x2, int y2) {
 void printSoln(vector<int> v[4]) {
 
 	for(int i = 0; i < v[0].size(); ++i) {
-			cout<<v[0][i]<<" "<<v[1][i]<<" "<<v[2][i]<<" "<<v[3][i]<<endl;
+		cout<<v[0][i]<<" "<<v[1][i]<<" "<<v[2][i]<<" "<<v[3][i]<<endl;
 	}
 }
 
 void clearRow(vector<int> v[4], int x, int n, int m) {
 
 	int c = 0;
-	while(c < m-2) {
+	while(c < m-1) {
 		move(v, x, c+1, x, c);
 		move(v, x, c+2, x, c+1);
 		move(v, x, c, x, c+2);
+		matrix[x][c+1] = false;
 		++c;
 	}
 }
@@ -36,10 +47,11 @@ void clearRow(vector<int> v[4], int x, int n, int m) {
 void clearCol(vector<int> v[4], int y, int n, int m) {
 
 	int c = 0;
-	while(c < n-2) {
+	while(c < n-1) {
 		move(v, c+1, y, c, y);
 		move(v, c+2, y, c+1, y);
 		move(v, c, y, c+2, y);
+		matrix[c+1][y] = false;
 		++c;
 	}
 }
@@ -116,29 +128,29 @@ int main() {
 		if(m != 1) {
 			while(blank.second != 0) {
 
-				if(blank.second > 1) {
-					//cout<<blank.second<<endl;
-					move(v, blank.first, blank.second-2, blank.first, blank.second);
-					blank.second = blank.second-2;
-				}
-				else if(blank.second > 0) {
-					move(v, blank.first, blank.second-1, blank.first, blank.second);;
+				// if(blank.second > 1) {
+				// 	//cout<<blank.second<<endl;
+				// 	move(v, blank.first, blank.second-2, blank.first, blank.second);
+				// 	blank.second = blank.second-2;
+				// }
+				// else if(blank.second > 0) {
+					move(v, blank.first, blank.second-1, blank.first, blank.second);
 					blank.second = blank.second-1;	
-				} 
+				//} 
 			}
 		}
 
 		if(n != 1) {
 			while(blank.first != 0) {
 
-				if(blank.first > 1) {
-					move(v, blank.first-2, blank.second, blank.first, blank.second);;
-					blank.first = blank.first-2;
-				}
-				else if(blank.first > 0) {
-					move(v, blank.first-1, blank.second, blank.first, blank.second);;
+				// if(blank.first > 1) {
+				// 	move(v, blank.first-2, blank.second, blank.first, blank.second);
+				// 	blank.first = blank.first-2;
+				// }
+				// else if(blank.first > 0) {
+					move(v, blank.first-1, blank.second, blank.first, blank.second);
 					blank.first = blank.first-1;	
-				}
+				//}
 			} 
 		}
 
@@ -154,25 +166,30 @@ int main() {
 
 				moveRight(v, n-2, 0, n, m);
 				move(v, n-1, m-1, n-3, m-1);
+				matrix[n-2][m-1] = false;
 				moveUp(v, n-3, m-1);
 
 				if(m > 2) {
 					move(v, 0, m-1, 0, m-3);
+					matrix[0][m-2] = false;
 				}
 				else {
 					move(v, 0, m-1, 1, m-1);
 					move(v, 0, m-2, 0, m-1);
 					move(v, 0, m-1, 2, m-1);
+					matrix[1][m-1] = false;
 				}				
 			}
 			else {
 				//cout<<v[0].size()<<endl;
 				move(v, 0, m-2, 1, m-2);
 				move(v, 1, m-1, 1, m-3);
+				matrix[1][m-2] = false;
 				moveLeft(v, 1, m-3, n, m);
 				move(v, 0, 0, 0, 1);
 				move(v, 1, 0, 0, 0);
 				move(v, 0, 0, 0, 2);
+				matrix[0][1] = false;
 			}
 		}
 		else if(n == 1) {
@@ -184,6 +201,8 @@ int main() {
 
         cout<<v[0].size()<<endl;
 		printSoln(v);
+
+		//printMatrix(n, m);
 	}
 
 	return 0;
